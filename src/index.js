@@ -1,12 +1,42 @@
-import { StrictMode } from "react";
-import ReactDOM from "react-dom";
+import React from "react";
+import { render } from "react-dom";
+import axios from "axios";
 
-import App from "./App";
+class App extends React.Component {
+  constructor() {
+    super();
+    this.state = { member: [] };
+  }
 
-const rootElement = document.getElementById("root");
-ReactDOM.render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-  rootElement
-);
+  render() {
+    console.log(this.state.member);
+    return (
+      <div>
+        <button onClick={this.getJson}>Get Json</button>
+        {this.membersList(this.state.member)}
+      </div>
+    );
+  }
+
+  membersList = (list) => {
+    const members = list.map((member) => {
+      return (
+        <li>
+          {member.name} / {member.age}
+        </li>
+      );
+    });
+
+    return <ul>{members}</ul>;
+  };
+
+  getJson = () => {
+    const url = "https://jsondata.okiba.me/v1/json/qyknq210903055347";
+    axios.get(url).then((res) => {
+      console.log(res.data);
+      this.setState(res.data);
+    });
+  };
+}
+
+render(<App />, document.getElementById("root"));
